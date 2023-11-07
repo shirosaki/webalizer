@@ -419,6 +419,7 @@ int parse_record_squid(char *buffer,int size)
 
    while ((*cp1 != '\0') && (cp1 != eos)) *cp2++ = *cp1++;
    *cp2='\0';
+   log_rec.hnamelen = cp2 - log_rec.hostname;
    if (*cp1 != '\0')
    {
       if (verbose)
@@ -689,7 +690,11 @@ int parse_record_w3c(char *buffer,int size)
    else return 0;
 
    /* Save hostname */
-   if (fields.ip) strncpy(log_rec.hostname, fields.ip, MAXHOST - 1);
+   if (fields.ip)
+   {
+        strncpy(log_rec.hostname, fields.ip, MAXHOST - 1);
+        log_rec.hnamelen = strlen(log_rec.hostname);
+   }
       
    /* Save response code */
    if (fields.status) log_rec.resp_code = atoi(fields.status);

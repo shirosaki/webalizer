@@ -1138,20 +1138,30 @@ int main(int argc, char *argv[])
                   /* Invalid hostname found! */
                   if (strcmp(log_rec.hostname, host_buf))
                      strcpy(log_rec.hostname, host_buf);
-                  else strncpy(log_rec.hostname,"Invalid",8);
+                  else
+                  {
+                     strncpy(log_rec.hostname,"Invalid",8);
+                     log_rec.hnamelen = 7;
+                  }
                   break;
                }
             }
             if (*cp1 == '\0')   /* did we make it to the end? */
             {
                if (!isalnum((unsigned char)*(cp1-1)))
+               {
                   strncpy(log_rec.hostname,"Invalid",8);
+                  log_rec.hnamelen = 7;
+               }
             }
          }
 
          /* Catch blank hostnames here */
          if (log_rec.hostname[0]=='\0')
+         {
             strncpy(log_rec.hostname,"Unknown",8);
+            log_rec.hnamelen = 7;
+         }
 
          /* Ignore/Include check */
          if ( (isinlist(include_sites,log_rec.hostname,log_rec.hnamelen)==NULL) &&
